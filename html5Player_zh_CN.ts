@@ -22,21 +22,18 @@
 <context>
     <name>TCefHandle</name>
     <message>
-        <location filename="src/cefview/TCefHandle.cpp" line="14"/>
-        <location filename="src/cefview/TCefHandle.cpp" line="112"/>
+        <location filename="src/cefview/TCefHandle.cpp" line="89"/>
         <source>back</source>
         <translation>后退</translation>
     </message>
     <message>
-        <location filename="src/cefview/TCefHandle.cpp" line="22"/>
-        <location filename="src/cefview/TCefHandle.cpp" line="117"/>
+        <location filename="src/cefview/TCefHandle.cpp" line="94"/>
         <source>forward</source>
         <oldsource>forwad</oldsource>
         <translation>前进</translation>
     </message>
     <message>
-        <location filename="src/cefview/TCefHandle.cpp" line="30"/>
-        <location filename="src/cefview/TCefHandle.cpp" line="122"/>
+        <location filename="src/cefview/TCefHandle.cpp" line="99"/>
         <source>reload</source>
         <translation>刷新</translation>
     </message>
