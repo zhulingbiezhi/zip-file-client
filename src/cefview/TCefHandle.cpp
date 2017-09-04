@@ -49,11 +49,11 @@ void TCefHandle::onLoadError(int errorCode, const QString& errorMsg, const QStri
 	qDebug() << __FUNCTION__ << errorCode << errorMsg << failedUrl;
 }
 
-void TCefHandle::onInvokeMethodNotify(const QString& method, const QVariantList& arguments)
-{
-	//throw std::logic_error("The method or operation is not implemented.");
-	qDebug() << __FUNCTION__ << method << arguments;
-}
+//void TCefHandle::onInvokeMethodNotify(const QString& method, const QVariantList& arguments)
+//{
+//	//throw std::logic_error("The method or operation is not implemented.");
+//	qDebug() << __FUNCTION__ << method << arguments;
+//}
 
 void TCefHandle::onUrlChange(const QString& url)
 {

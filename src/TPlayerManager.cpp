@@ -4,13 +4,13 @@
 #include "TZipServer.h"
 
 #ifdef USE_WEBKIT
-	#include "TWebKitView.h"
+#include "TWebKitView.h"
 #endif
 #ifdef USE_WEBENGINE
-	#include "TWebEngineView.h"
+#include "TWebEngineView.h"
 #endif
 #ifdef USE_CEF
-	#include "TCefView.h"
+#include "TCefView.h"
 #endif
 
 #include <QTime>
@@ -34,16 +34,16 @@ TPlayerManager::TPlayerManager()
 
 TPlayerManager::~TPlayerManager()
 {
-// 	if (mpWebView)
-// 	{
-// 		//delete mpWebView;
-// 		mpWebView->deleteLater();
-// 	}
-// 	if (mpWebViewRender)
-// 	{
-// 		//delete mpWebViewRender;
-// 		mpWebViewRender->deleteLater();
-// 	}
+	// 	if (mpWebView)
+	// 	{
+	// 		//delete mpWebView;
+	// 		mpWebView->deleteLater();
+	// 	}
+	// 	if (mpWebViewRender)
+	// 	{
+	// 		//delete mpWebViewRender;
+	// 		mpWebViewRender->deleteLater();
+	// 	}
 	if (mpZipServer)
 	{
 		delete mpZipServer;
@@ -63,7 +63,6 @@ bool TPlayerManager::setSymmetricKey(PlayItem::SymEncryptionType type, const QBy
 bool TPlayerManager::playFileOperator(File_Operator * pFileOperator, qint64 pos /*= 0*/)
 {
 	mpFileOperator = pFileOperator;
-	qDebug() << __FUNCTION__ << QTime::currentTime();
 	if (pFileOperator == NULL)
 	{
 		return false;
@@ -73,17 +72,17 @@ bool TPlayerManager::playFileOperator(File_Operator * pFileOperator, qint64 pos 
 		mpWebView->LoadPage(mmapPlayRecord.value(mstrUuid));
 		return true;
 	}
-	
-	QString  strUrl;
-	if (Play(pFileOperator, strUrl))
+	qDebug() << __FUNCTION__ << "111" << QTime::currentTime();
+	if (nullptr != mpZipServer)
 	{
-		mmapPlayRecord.insert(mstrUuid, strUrl);
-		return true; 
+		disconnect(mpZipServer, &TZipServer::sigParseFinished, this, &TPlayerManager::onParseFinished);
+		delete mpZipServer;
+		mpZipServer = nullptr;
 	}
-	else
-	{
-		return false;
-	}
+	qDebug() << __FUNCTION__ << "222" << QTime::currentTime();
+	mpZipServer = new TZipServer();
+	connect(mpZipServer, &TZipServer::sigParseFinished, this, &TPlayerManager::onParseFinished);
+	mpZipServer->StartServer(pFileOperator, mqSize);
 }
 
 void TPlayerManager::setPlayInfo(const QString &name, const QVariant &param, const QVariant &, const QVariant &, const QVariant &)
@@ -120,29 +119,6 @@ bool TPlayerManager::pause(bool bPause)
 	return true;
 }
 
-bool TPlayerManager::Play(File_Operator * pFileOperator, QString& strUrl)
-{
-	qDebug() << __FUNCTION__ << "111" << QTime::currentTime();
-	if (nullptr != mpZipServer)
-	{
-		delete mpZipServer;
-		mpZipServer = nullptr;
-	}
-	mpZipServer = new TZipServer();
-	strUrl = mpZipServer->StartServer(pFileOperator, mqSize);	
-	//strUrl = "http://127.0.0.1:8088/index.html";
-	qDebug() << __FUNCTION__ << "222" << QTime::currentTime();
-
-	if (!strUrl.isEmpty())
-	{
-		mbPause = false;
-		mpWebView->LoadPage(strUrl);
-		mpWebViewRender->AddWidget(mpWebView->GetWebView());
-		return true;
-	}
-	return false;
-}
-
 void TPlayerManager::SetMprxHotAreaInfo(const QMap<int, CubicShapeMap> & shapeMap, const QImage & data, QString externInfo)
 {
 	qDebug() << __FUNCTION__ << externInfo;
@@ -157,5 +133,21 @@ void TPlayerManager::clear()
 		delete mpZipServer;
 		mpZipServer = nullptr;
 	}
-	//mpHttpServer->CloseAllServer();
+}
+
+void TPlayerManager::onParseFinished(const QString& url)
+{
+	//strUrl = "http://127.0.0.1:8088/index.html";
+	qDebug() << __FUNCTION__ << "333" << QTime::currentTime();
+	if (!url.isEmpty())
+	{
+		QString strUrl = url + "/index.html";
+		qDebug() << __FUNCTION__ << strUrl;
+		mpWebView->LoadPage(strUrl);
+		mpWebViewRender->AddWidget(mpWebView->GetWebView());
+	}
+	else
+	{
+		qDebug() << __FUNCTION__ << "the url is empty !";
+	}
 }

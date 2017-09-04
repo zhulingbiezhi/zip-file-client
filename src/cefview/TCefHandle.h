@@ -30,7 +30,7 @@ private:
 
 	virtual void onLoadError(int errorCode, const QString& errorMsg, const QString& failedUrl) override;
 
-	virtual void onInvokeMethodNotify(const QString& method, const QVariantList& arguments) override;
+//	virtual void onInvokeMethodNotify(const QString& method, const QVariantList& arguments) override;
 
 	virtual void onUrlChange(const QString& url) override;
 

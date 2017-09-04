@@ -4,32 +4,42 @@
 #include "file_operator.h"
 #include <QTcpServer>
 #include <QTcpSocket>
+#include <QObject>
 
-class TTcpTransfer
+class TTcpTransfer : public QObject
 {
+	Q_OBJECT
 public:
 	TTcpTransfer(File_Operator  *mFileOperater, qint64 totalSize);
 	~TTcpTransfer();
+
 public:
-	bool  Start();
-	bool  Prepare();
+	Q_INVOKABLE bool  Start();
+	Q_INVOKABLE bool  Prepare();
+	void Stop();
+
+private:
 	bool  WaitForConnect(int seconds);
 	bool  WaitForFinished(int seconds);
 	bool  TransferData();
-
-	int   GetTcpPort(){ return mnTcpPort; }
-	QString GetServeUrl(){ return mstrResultUrl; }
+	void  TransferNeedData();
 
 protected:
+
+
+signals :
+	void sigPrepareFinished(const int& port);
+	void sigParseFinished(const QString& url);
 
 private:
 	QTcpServer       *mpTCPServer;
 	QTcpSocket       *mpTCPSocket;
 	File_Operator    *mpFileOperator;
 	bool			 mbSuccess;
-	QString			 mstrResultUrl;
-	int				 mnTcpPort;
+	//QString			 mstrResultUrl;
+	//int				 mnTcpPort;
 	qint64			 mqTotalSize;
+	bool			 mbStop;
 };
 
 

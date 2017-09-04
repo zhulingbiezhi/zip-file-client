@@ -29,8 +29,8 @@ public:
 
 	void clear();
 
-private:
-	bool  Play(File_Operator * pFileOperator, QString& strUrl);
+	public slots:
+	void  onParseFinished(const QString& url);
 
 private:
 	TWebView						*mpWebView;
@@ -40,7 +40,7 @@ private:
 	QMap<QString, QString>			mmapPlayRecord;
 	qint64						    mqSize;
 	QString							mstrUuid;
-	File_Operator					*mpFileOperator;
-	bool						    mbPause;
+	File_Operator *					mpFileOperator;
+	bool							mbPause;
 };
 #endif
